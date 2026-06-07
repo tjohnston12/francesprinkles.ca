@@ -31,7 +31,7 @@ exactly as named. Commit and push.
    `index.html` statically and turns each file in `/api` into a serverless
    function automatically. It installs `stripe` from `package.json` for you.
 3. Deploy. You'll get a URL like `https://france-and-sprinkles.vercel.app`
-   (add your custom domain `francesprinkles.com` later under Settings → Domains).
+   (add your custom domain `francesprinkles.ca` later under Settings → Domains).
 
 ## 3) Set up Airtable (your order database)
 
@@ -59,7 +59,7 @@ exactly as named. Commit and push.
 1. In the [Stripe Dashboard](https://dashboard.stripe.com), grab your
    **Publishable** (`pk_…`) and **Secret** (`sk_…`) keys.
 2. **Developers → Webhooks → Add endpoint**:
-   - URL: `https://francesprinkles.com/api/webhook`
+   - URL: `https://francesprinkles.ca/api/webhook`
    - Event to send: **`checkout.session.completed`**
    - After creating it, copy the endpoint's **Signing secret** (`whsec_…`).
 
@@ -68,9 +68,9 @@ exactly as named. Commit and push.
 After payment, the webhook emails a branded confirmation to the customer and a
 heads-up to you. We use [Resend](https://resend.com) (free tier is plenty to start).
 
-1. Create a Resend account and **verify your domain** `francesprinkles.com`
+1. Create a Resend account and **verify your domain** `francesprinkles.ca`
    (add the DNS records they give you). This lets you send from
-   `orders@francesprinkles.com`. *To test before the domain verifies, you can
+   `orders@francesprinkles.ca`. *To test before the domain verifies, you can
    send from `onboarding@resend.dev`.*
 2. Create an **API key**.
 
@@ -90,10 +90,10 @@ Project → **Settings → Environment Variables**:
 | `AIRTABLE_TOKEN`        | your Airtable Personal Access Token      |
 | `AIRTABLE_BASE_ID`      | `appXXXXXXXX`                            |
 | `AIRTABLE_TABLE`        | `Orders` (optional — this is the default)|
-| `SITE_URL`              | `https://francesprinkles.com`            |
+| `SITE_URL`              | `https://francesprinkles.ca`            |
 | `RESEND_API_KEY`        | your Resend API key                      |
-| `RESEND_FROM`           | `France & Sprinkles <orders@francesprinkles.com>` (optional) |
-| `BAKERY_EMAIL`          | `france@francesprinkles.com` (where order alerts go) |
+| `RESEND_FROM`           | `France & Sprinkles <orders@francesprinkles.ca>` (optional) |
+| `BAKERY_EMAIL`          | `france@francesprinkles.ca` (where order alerts go) |
 
 Redeploy after adding them.
 
@@ -125,7 +125,7 @@ Commit & push — Vercel redeploys automatically.
 4. Stripe calls `api/webhook.js`, which verifies the signature, reads the items
    and the customer's pickup name / email / phone, **writes the order into
    Airtable** with status `Paid`, and **emails** a branded confirmation to the
-   customer plus an order alert to `france@francesprinkles.com`.
+   customer plus an order alert to `france@francesprinkles.ca`.
 
 ## Customising
 - **Menu & prices:** edit `PRODUCTS` in `index.html` **and** the matching
@@ -133,7 +133,7 @@ Commit & push — Vercel redeploys automatically.
   agree — the server list is the one that actually charges.
 - **Market details / hours / cut-off:** in the Saturday Market section of
   `index.html` and on `success.html`.
-- **Contact:** footer of `index.html` (currently `france@francesprinkles.com`).
+- **Contact:** footer of `index.html` (currently `france@francesprinkles.ca`).
 
 ### Note
 Menu items, prices (CAD), and the market address/hours are placeholders — swap

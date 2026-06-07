@@ -12,7 +12,7 @@
 const Stripe = require("stripe");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-const SITE_URL = process.env.SITE_URL || "https://francesprinkles.com";
+const SITE_URL = process.env.SITE_URL || "https://francesprinkles.ca";
 
 // Prices live here on the SERVER, never trusted from the browser.
 // Keep in sync with PRODUCTS in index.html. Amounts are in CENTS (CAD).

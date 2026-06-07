@@ -16,8 +16,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 module.exports.config = { api: { bodyParser: false } };
 
 // where order emails come from / go to
-const FROM_EMAIL   = process.env.RESEND_FROM  || "France & Sprinkles <orders@francesprinkles.com>";
-const BAKERY_EMAIL = process.env.BAKERY_EMAIL || "france@francesprinkles.com";
+const FROM_EMAIL   = process.env.RESEND_FROM  || "France & Sprinkles <orders@francesprinkles.ca>";
+const BAKERY_EMAIL = process.env.BAKERY_EMAIL || "france@francesprinkles.ca";
 
 function readRawBody(req) {
   return new Promise((resolve, reject) => {
@@ -96,7 +96,7 @@ function customerEmail({ name, lineItems, total }) {
         <span style="color:#34425e">Just give your name at the stall — look for the sunny banner!</span>
       </div>
       <p style="text-align:center;color:#9aa3b5;font-size:12px;margin-top:22px">
-        Questions? Reply to this email or write to france@francesprinkles.com
+        Questions? Reply to this email or write to france@francesprinkles.ca
       </p>
     </div>
   </div>`;

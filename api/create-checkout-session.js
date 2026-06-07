@@ -17,18 +17,10 @@ const SITE_URL = process.env.SITE_URL || "https://francesprinkles.ca";
 // Prices live here on the SERVER, never trusted from the browser.
 // Keep in sync with PRODUCTS in index.html. Amounts are in CENTS (CAD).
 const CATALOG = {
-  croissant:  { name: "Butter Croissant",            amount: 450 },
-  painchoc:   { name: "Pain au Chocolat",            amount: 475 },
-  almond:     { name: "Almond Croissant",            amount: 525 },
-  sourdough:  { name: "Sourdough Boule",             amount: 800 },
-  baguette:   { name: "Baguette Tradition",          amount: 400 },
-  rye:        { name: "Country Rye",                 amount: 750 },
-  tartlet:    { name: "Seasonal Fruit Tartlet",      amount: 550 },
-  eclair:     { name: "Chocolate Éclair",            amount: 500 },
-  canele:     { name: "Canelés (4-pack)",            amount: 1200 },
-  cupcake:    { name: "Funfetti Cupcake",            amount: 400 },
-  cookies:    { name: "Sprinkle Sugar Cookies (6)",  amount: 900 },
-  macaron:    { name: "Macaron Box (6)",             amount: 1500 }
+  cupcake: { name: "Funfetti Cupcake",     amount: 400 },
+  bread:   { name: "Sourdough Loaf",       amount: 800 },
+  cookies: { name: "Sprinkle Cookies (6)", amount: 900 },
+  macaron: { name: "Macaron Box (6)",      amount: 1500 }
 };
 
 module.exports = async (req, res) => {

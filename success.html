@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order confirmed — France &amp; Sprinkles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..800&family=Baloo+2:wght@600;700;800&family=Nunito:wght@400..800&display=swap" rel="stylesheet">
+<style>
+  :root{--cream:#FBF6EA;--navy:#213A6B;--sun:#F9A826;--ink:#34425e;
+    --s-coral:#F2645A;--s-orange:#F58E33;--s-yellow:#F4C53F;--s-green:#7BB749;--s-teal:#3FB6C4;--s-blue:#4A8FD4;--s-pink:#EE7FB0;--s-purple:#9B7FC4;}
+  *{margin:0;box-sizing:border-box}
+  body{font-family:"Nunito",sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;
+    display:grid;place-items:center;padding:24px;
+    background-image:radial-gradient(circle at 15% 10%,#fff7e6 0,transparent 40%),radial-gradient(circle at 85% 0,#fdeede 0,transparent 38%);overflow:hidden}
+  .sprinkle{position:fixed;border-radius:999px;opacity:.85;animation:float 9s ease-in-out infinite;z-index:0}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-16px) rotate(var(--r))}}
+  .card{position:relative;z-index:2;background:#FFFDF7;border:1px solid #EFE2C4;border-radius:28px;
+    max-width:480px;width:100%;padding:46px 38px;text-align:center;box-shadow:0 18px 50px -18px rgba(33,58,107,.3)}
+  .sun{width:96px;margin:0 auto 6px;animation:bob 4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  h1{font-family:"Fraunces",serif;color:var(--navy);font-size:2.1rem;margin-bottom:8px}
+  h1 .amp{color:var(--s-orange);font-style:italic}
+  .tick{font-family:"Baloo 2";font-weight:700;color:#fff;background:var(--s-green);display:inline-block;
+    padding:.3em 1em;border-radius:999px;font-size:.82rem;margin-bottom:18px}
+  p{margin:10px 0}
+  .pickup{background:var(--cream);border:1px dashed var(--sun);border-radius:14px;padding:16px;margin:20px 0;text-align:left}
+  .pickup b{font-family:"Baloo 2";color:var(--navy);display:block;margin-bottom:4px}
+  .btn{font-family:"Baloo 2";font-weight:700;background:var(--sun);color:#16264a;border:none;border-radius:999px;
+    padding:.8em 1.7em;font-size:1rem;cursor:pointer;text-decoration:none;display:inline-block;margin-top:8px}
+  .ref{font-size:.78rem;color:#9aa3b5;margin-top:16px;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="card">
+  <svg class="sun" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="g" cx="40%" cy="35%" r="70%"><stop offset="0%" stop-color="#FFE08A"/><stop offset="60%" stop-color="#FBB94A"/><stop offset="100%" stop-color="#F49B22"/></radialGradient></defs>
+    <g fill="#F9A826" id="rays"></g>
+    <circle cx="60" cy="60" r="32" fill="url(#g)" stroke="#E89020" stroke-width="2"/>
+    <circle cx="46" cy="66" r="6" fill="#F58FA0" opacity=".7"/><circle cx="74" cy="66" r="6" fill="#F58FA0" opacity=".7"/>
+    <path d="M44 56 q5 -7 10 0" fill="none" stroke="#3a2a12" stroke-width="3" stroke-linecap="round"/>
+    <path d="M66 56 q5 -7 10 0" fill="none" stroke="#3a2a12" stroke-width="3" stroke-linecap="round"/>
+    <path d="M50 68 q10 11 20 0" fill="none" stroke="#3a2a12" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <div class="tick">✓ Payment received</div>
+  <h1>Merci! Your order's in <span class="amp">&amp;</span> baking 🧁</h1>
+  <p>We've got it — a confirmation is on its way to your email.</p>
+  <div class="pickup">
+    <b>📍 Pickup details</b>
+    Boyce Farmers Market · Stall #14<br>
+    665 George St, Fredericton, NB<br>
+    <b style="margin-top:8px">🕗 Saturday, 8:00am – 1:00pm</b>
+    Look for the sunny banner — just give your name at the stall.
+  </div>
+  <a class="btn" href="/">Back to the shop</a>
+  <div class="ref" id="ref"></div>
+</div>
+<script>
+  // rays
+  let r="";for(let i=0;i<12;i++){const a=i*30*Math.PI/180,x1=60+Math.cos(a)*34,y1=60+Math.sin(a)*34,x2=60+Math.cos(a)*48,y2=60+Math.sin(a)*48;
+    r+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#F9A826" stroke-width="5" stroke-linecap="round"/>`;}
+  document.getElementById('rays').innerHTML=r;
+  // confetti
+  const C=['#F2645A','#F58E33','#F4C53F','#7BB749','#3FB6C4','#4A8FD4','#EE7FB0','#9B7FC4'];
+  for(let i=0;i<26;i++){const s=document.createElement('span');s.className='sprinkle';const round=Math.random()>.5;
+    s.style.width=(round?8:14)+'px';s.style.height=(round?8:5)+'px';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
+    s.style.background=C[i%C.length];s.style.setProperty('--r',(Math.random()*360)+'deg');
+    s.style.animationDelay=(Math.random()*-9)+'s';s.style.animationDuration=(7+Math.random()*5)+'s';document.body.appendChild(s);}
+  // show stripe reference if present
+  const id=new URLSearchParams(location.search).get('session_id');
+  if(id) document.getElementById('ref').textContent='Order ref: '+id;
+</script>
+</body>
+</html>

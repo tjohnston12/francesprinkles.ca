@@ -1,0 +1,9 @@
+{
+  "name": "france-and-sprinkles",
+  "version": "1.0.0",
+  "description": "France & Sprinkles bakery storefront — online ordering with Stripe checkout and Airtable orders.",
+  "private": true,
+  "dependencies": {
+    "stripe": "^16.0.0"
+  }
+}

@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>France &amp; Sprinkles — Artisanal Bakery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..700&family=Baloo+2:wght@500;600;700;800&family=Nunito:ital,wght@0,400..900;1,400..700&display=swap" rel="stylesheet">
+<!-- Stripe.js — only used when DEMO_MODE is false -->
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+  :root{
+    --cream:#FBF6EA;
+    --cream-2:#F5EBD4;
+    --cream-3:#EFE2C4;
+    --paper:#FFFDF7;
+    --navy:#213A6B;
+    --navy-2:#16264a;
+    --ink:#34425e;
+    --sun:#F9A826;
+    --sun-2:#FFCB52;
+    --sun-3:#FFE08A;
+    /* sprinkle palette */
+    --s-coral:#F2645A;
+    --s-orange:#F58E33;
+    --s-yellow:#F4C53F;
+    --s-green:#7BB749;
+    --s-teal:#3FB6C4;
+    --s-blue:#4A8FD4;
+    --s-pink:#EE7FB0;
+    --s-purple:#9B7FC4;
+    --radius:22px;
+    --shadow:0 18px 50px -18px rgba(33,58,107,.30);
+    --shadow-sm:0 8px 24px -10px rgba(33,58,107,.25);
+    --maxw:1180px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Nunito",sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    background-image:radial-gradient(circle at 12% 8%, #fff7e6 0, transparent 40%),
+                     radial-gradient(circle at 88% 0%, #fdeede 0, transparent 38%);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{font-family:"Fraunces",serif;color:var(--navy);font-weight:600;line-height:1.05;letter-spacing:-.01em}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  section{position:relative}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    font-family:"Baloo 2",sans-serif;font-weight:700;font-size:1rem;
+    border:none;cursor:pointer;border-radius:999px;padding:.85em 1.6em;
+    display:inline-flex;align-items:center;gap:.5em;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{background:var(--sun);color:var(--navy-2);box-shadow:0 8px 0 -2px #d98a16, var(--shadow-sm)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 0 -2px #d98a16, var(--shadow)}
+  .btn-primary:active{transform:translateY(2px);box-shadow:0 4px 0 -2px #d98a16}
+  .btn-navy{background:var(--navy);color:#fff;box-shadow:var(--shadow-sm)}
+  .btn-navy:hover{transform:translateY(-2px);background:var(--navy-2);box-shadow:var(--shadow)}
+  .btn-ghost{background:transparent;color:var(--navy);border:2px solid var(--navy)}
+  .btn-ghost:hover{background:var(--navy);color:#fff}
+
+  /* ---------- announcement bar ---------- */
+  .topbar{
+    background:var(--navy-2);color:#fff;font-family:"Baloo 2",sans-serif;
+    font-size:.9rem;text-align:center;padding:.55rem 1rem;position:relative;overflow:hidden;
+  }
+  .topbar b{color:var(--sun-2)}
+
+  /* ---------- nav ---------- */
+  nav{position:sticky;top:0;z-index:60;background:rgba(251,246,234,.88);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--cream-3)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;max-width:var(--maxw);margin:0 auto}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .mark{width:46px;height:46px;flex:none}
+  .brand .name{font-family:"Fraunces",serif;font-weight:600;font-size:1.45rem;color:var(--navy);line-height:1}
+  .brand .name .amp{color:var(--s-orange);font-style:italic}
+  .brand .name .sp{font-family:"Baloo 2",sans-serif;font-weight:800;display:block;font-size:.95rem;letter-spacing:.02em}
+  .brand .name .sp span:nth-child(1){color:var(--s-coral)}
+  .brand .name .sp span:nth-child(2){color:var(--s-orange)}
+  .brand .name .sp span:nth-child(3){color:var(--s-yellow)}
+  .brand .name .sp span:nth-child(4){color:var(--s-green)}
+  .brand .name .sp span:nth-child(5){color:var(--s-teal)}
+  .brand .name .sp span:nth-child(6){color:var(--s-blue)}
+  .brand .name .sp span:nth-child(7){color:var(--s-pink)}
+  .brand .name .sp span:nth-child(8){color:var(--s-purple)}
+  /* baker's cap perched on the F */
+  .capF{position:relative;display:inline-block}
+  .capF .cap-ico{position:absolute;left:50%;top:0;width:.9em;height:.78em;line-height:0;
+    transform:translate(-44%,-64%) rotate(-9deg);pointer-events:none;
+    filter:drop-shadow(0 2px 2px rgba(33,58,107,.12))}
+  .foot-brand .capF .cap-ico{width:.82em;transform:translate(-44%,-60%) rotate(-9deg)}
+  .nav-links{display:flex;align-items:center;gap:28px;font-family:"Baloo 2",sans-serif;font-weight:600}
+  .nav-links a{color:var(--navy);position:relative;padding:4px 0;font-size:1rem}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;height:3px;width:0;border-radius:3px;
+    background:var(--sun);transition:width .22s ease}
+  .nav-links a:hover::after{width:100%}
+  .cart-btn{position:relative;background:var(--navy);color:#fff;border:none;cursor:pointer;border-radius:999px;
+    width:46px;height:46px;display:grid;place-items:center;transition:transform .18s, background .18s}
+  .cart-btn:hover{transform:translateY(-2px);background:var(--navy-2)}
+  .cart-btn .count{position:absolute;top:-5px;right:-5px;background:var(--s-coral);color:#fff;font-family:"Baloo 2";
+    font-weight:800;font-size:.72rem;min-width:21px;height:21px;border-radius:999px;display:grid;place-items:center;
+    border:2px solid var(--cream);transform:scale(0);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+  .cart-btn .count.show{transform:scale(1)}
+  .nav-toggle{display:none;background:none;border:none;cursor:pointer;color:var(--navy)}
+
+  /* ---------- hero ---------- */
+  .hero{padding:54px 0 70px;text-align:center;position:relative}
+  .confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+  .sprinkle{position:absolute;border-radius:999px;opacity:.9;animation:float 9s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-16px) rotate(var(--r))}}
+  .hero-inner{position:relative;z-index:2;max-width:820px;margin:0 auto;padding:0 24px}
+  .hero .badge{display:inline-flex;align-items:center;gap:.5em;font-family:"Baloo 2";font-weight:700;color:var(--navy);
+    background:var(--paper);border:2px dashed var(--sun);padding:.4em 1em;border-radius:999px;font-size:.9rem;margin-bottom:22px;
+    box-shadow:var(--shadow-sm)}
+  .hero .mascot{width:140px;height:140px;margin:0 auto 8px;display:block;filter:drop-shadow(0 14px 22px rgba(249,168,38,.35));
+    animation:bob 4.5s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .hero h1{font-size:clamp(2.4rem,6vw,4.3rem);font-weight:600}
+  .hero h1 .rainbow span{font-family:"Baloo 2";font-weight:800}
+  .hero h1 .rainbow span:nth-child(1){color:var(--s-coral)}
+  .hero h1 .rainbow span:nth-child(2){color:var(--s-orange)}
+  .hero h1 .rainbow span:nth-child(3){color:var(--s-yellow)}
+  .hero h1 .rainbow span:nth-child(4){color:var(--s-green)}
+  .hero h1 .rainbow span:nth-child(5){color:var(--s-teal)}
+  .hero h1 .rainbow span:nth-child(6){color:var(--s-blue)}
+  .hero h1 .rainbow span:nth-child(7){color:var(--s-pink)}
+  .hero h1 .rainbow span:nth-child(8){color:var(--s-purple)}
+  .hero p.lede{font-size:1.2rem;max-width:560px;margin:20px auto 30px;color:var(--ink)}
+  .hero .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .reveal{opacity:0;transform:translateY(18px);animation:rise .7s cubic-bezier(.2,.7,.3,1) forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ---------- steps ---------- */
+  .steps{padding:18px 0 64px}
+  .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .step{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);padding:30px 26px;text-align:center;
+    box-shadow:var(--shadow-sm);position:relative}
+  .step .num{font-family:"Baloo 2";font-weight:800;font-size:.85rem;color:#fff;background:var(--navy);width:30px;height:30px;
+    border-radius:999px;display:grid;place-items:center;position:absolute;top:-15px;left:50%;transform:translateX(-50%)}
+  .step .ico{font-size:2.4rem;margin-bottom:6px}
+  .step h3{font-size:1.3rem;margin-bottom:6px}
+  .step p{font-size:.97rem}
+
+  /* ---------- section heading ---------- */
+  .sec-head{text-align:center;margin-bottom:38px}
+  .sec-head .kicker{font-family:"Baloo 2";font-weight:700;color:var(--s-orange);letter-spacing:.12em;text-transform:uppercase;
+    font-size:.85rem;display:inline-block;margin-bottom:8px}
+  .sec-head h2{font-size:clamp(2rem,4.5vw,3rem)}
+  .sec-head p{max-width:520px;margin:12px auto 0;color:var(--ink)}
+
+  /* ---------- menu ---------- */
+  .menu{padding:70px 0;background:
+     linear-gradient(var(--cream-2),var(--cream-2));border-top:1px solid var(--cream-3);border-bottom:1px solid var(--cream-3)}
+  .filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:34px}
+  .filter{font-family:"Baloo 2";font-weight:700;font-size:.92rem;border:2px solid var(--cream-3);background:var(--paper);
+    color:var(--navy);padding:.45em 1.1em;border-radius:999px;cursor:pointer;transition:all .18s}
+  .filter:hover{border-color:var(--sun)}
+  .filter.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+  .card{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);overflow:hidden;
+    box-shadow:var(--shadow-sm);transition:transform .2s ease, box-shadow .2s ease;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+  .card .thumb{height:140px;display:grid;place-items:center;font-size:3.6rem;position:relative}
+  .card .thumb .tag{position:absolute;top:12px;left:12px;font-family:"Baloo 2";font-weight:700;font-size:.7rem;
+    background:rgba(255,255,255,.85);color:var(--navy);padding:.2em .7em;border-radius:999px}
+  .card .body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .card h3{font-size:1.22rem}
+  .card .desc{font-size:.9rem;color:#6b7488;flex:1}
+  .card .row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+  .card .price{font-family:"Baloo 2";font-weight:800;color:var(--navy);font-size:1.2rem}
+  .add{font-family:"Baloo 2";font-weight:700;background:var(--sun);color:var(--navy-2);border:none;border-radius:999px;
+    padding:.5em 1.05em;cursor:pointer;transition:transform .15s, background .15s;font-size:.92rem}
+  .add:hover{transform:scale(1.05);background:var(--sun-2)}
+  .add.added{background:var(--s-green);color:#fff}
+
+  /* ---------- story ---------- */
+  .story{padding:80px 0}
+  .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+  .story-card{background:var(--navy);color:var(--cream);border-radius:28px;padding:46px;position:relative;overflow:hidden;
+    box-shadow:var(--shadow)}
+  .story-card::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 80% 10%, rgba(249,168,38,.28), transparent 45%)}
+  .story-card .big-sun{position:absolute;right:-30px;bottom:-30px;width:170px;opacity:.22}
+  .story-card h2{color:#fff;position:relative}
+  .story-card p{position:relative;margin-top:14px;color:#dfe6f2}
+  .story-text h2 .amp{color:var(--s-orange);font-style:italic}
+  .story-text p{margin-top:16px}
+  .story-text .sig{font-family:"Fraunces";font-style:italic;font-size:1.5rem;color:var(--navy);margin-top:20px}
+  .pill-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .pill{font-family:"Baloo 2";font-weight:700;font-size:.85rem;padding:.4em 1em;border-radius:999px;background:var(--cream-2);
+    color:var(--navy);border:1px solid var(--cream-3)}
+
+  /* ---------- market ---------- */
+  .market{padding:80px 0;background:var(--cream-2);border-top:1px solid var(--cream-3)}
+  .market-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:stretch}
+  .market-info{background:var(--paper);border:1px solid var(--cream-3);border-radius:var(--radius);padding:38px;box-shadow:var(--shadow-sm)}
+  .market-info h2{font-size:2.2rem}
+  .info-row{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px dashed var(--cream-3)}
+  .info-row:last-child{border-bottom:none}
+  .info-row .ic{font-size:1.5rem;width:40px;height:40px;display:grid;place-items:center;background:var(--cream-2);border-radius:12px;flex:none}
+  .info-row b{color:var(--navy);font-family:"Baloo 2";display:block;font-size:1.02rem}
+  .map-card{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);position:relative;min-height:340px;
+    background:
+      linear-gradient(135deg,#e7efe2,#dfeaf2);border:1px solid var(--cream-3);display:grid;place-items:center;text-align:center;padding:30px}
+  .map-card .grid-lines{position:absolute;inset:0;opacity:.5;
+    background-image:linear-gradient(#cdd9e3 1px,transparent 1px),linear-gradient(90deg,#cdd9e3 1px,transparent 1px);
+    background-size:34px 34px}
+  .map-card .road{position:absolute;left:-10%;right:-10%;top:55%;height:14px;background:#fff;transform:rotate(-8deg);
+    box-shadow:0 0 0 3px #e3c98f}
+  .map-card .road2{position:absolute;top:-10%;bottom:-10%;left:42%;width:12px;background:#fff;box-shadow:0 0 0 3px #e3c98f}
+  .map-pin{position:relative;z-index:2;background:#fff;border-radius:18px;padding:18px 22px;box-shadow:var(--shadow);
+    border:2px solid var(--sun)}
+  .map-pin .dot{font-size:2rem}
+  .map-pin b{font-family:"Baloo 2";color:var(--navy);display:block;font-size:1.05rem}
+  .map-pin span{font-size:.88rem;color:#6b7488}
+
+  /* ---------- newsletter / cta band ---------- */
+  .band{padding:70px 0;text-align:center}
+  .band-inner{background:var(--sun);border-radius:30px;padding:54px 30px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .band-inner h2{color:var(--navy-2);font-size:clamp(1.8rem,4vw,2.7rem)}
+  .band-inner p{color:var(--navy);max-width:480px;margin:12px auto 24px;font-weight:700}
+  .nl{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:460px;margin:0 auto}
+  .nl input{font-family:"Nunito";font-weight:600;border:none;border-radius:999px;padding:.85em 1.3em;font-size:1rem;
+    min-width:230px;flex:1;outline:none;box-shadow:var(--shadow-sm)}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--navy-2);color:#cdd6e8;padding:56px 0 24px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:36px}
+  footer h4{font-family:"Baloo 2";color:#fff;margin-bottom:14px;font-size:1.05rem}
+  footer a{display:block;color:#cdd6e8;padding:4px 0;transition:color .15s}
+  footer a:hover{color:var(--sun-2)}
+  .foot-brand .name{font-family:"Fraunces";font-size:1.6rem;color:#fff}
+  .foot-brand .name .amp{color:var(--s-orange);font-style:italic}
+  .foot-brand p{margin-top:10px;font-size:.92rem;max-width:280px}
+  .foot-bottom{border-top:1px solid #2c3f6b;margin-top:36px;padding-top:18px;display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:10px;font-size:.85rem}
+  .foot-tri{height:5px;border-radius:5px;width:120px;
+    background:linear-gradient(90deg,var(--s-coral),var(--s-orange),var(--s-yellow),var(--s-green),var(--s-teal),var(--s-blue),var(--s-pink),var(--s-purple))}
+
+  /* ---------- cart drawer ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(22,38,74,.45);backdrop-filter:blur(2px);opacity:0;visibility:hidden;
+    transition:opacity .25s;z-index:80}
+  .overlay.open{opacity:1;visibility:visible}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:420px;max-width:92vw;background:var(--cream);z-index:90;
+    transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
+    box-shadow:-20px 0 60px -20px rgba(0,0,0,.4)}
+  .drawer.open{transform:none}
+  .drawer-head{padding:22px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--cream-3)}
+  .drawer-head h3{font-size:1.5rem}
+  .x{background:none;border:none;font-size:1.6rem;cursor:pointer;color:var(--navy);line-height:1}
+  .drawer-body{flex:1;overflow-y:auto;padding:18px 24px}
+  .empty{text-align:center;color:#8a93a6;padding:50px 10px}
+  .empty .e-ico{font-size:3rem;margin-bottom:10px}
+  .citem{display:flex;gap:14px;padding:14px 0;border-bottom:1px dashed var(--cream-3);align-items:center}
+  .citem .ci-thumb{font-size:2rem;width:52px;height:52px;background:var(--paper);border-radius:14px;display:grid;place-items:center;
+    border:1px solid var(--cream-3);flex:none}
+  .citem .ci-info{flex:1}
+  .citem .ci-info b{color:var(--navy);font-family:"Baloo 2";display:block}
+  .citem .ci-info .ci-price{font-size:.85rem;color:#6b7488}
+  .qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .qty button{width:26px;height:26px;border-radius:8px;border:1px solid var(--cream-3);background:var(--paper);cursor:pointer;
+    font-family:"Baloo 2";font-weight:800;color:var(--navy);font-size:1rem;line-height:1}
+  .qty button:hover{background:var(--sun);border-color:var(--sun)}
+  .qty span{font-family:"Baloo 2";font-weight:700;min-width:18px;text-align:center}
+  .ci-rm{background:none;border:none;color:#b9c0cf;cursor:pointer;font-size:1.2rem}
+  .ci-rm:hover{color:var(--s-coral)}
+  .drawer-foot{padding:20px 24px;border-top:1px solid var(--cream-3);background:var(--paper)}
+  .totals{display:flex;justify-content:space-between;margin-bottom:6px;font-size:.95rem}
+  .totals.grand{font-family:"Baloo 2";font-weight:800;font-size:1.3rem;color:var(--navy);margin:10px 0 4px}
+  .pickup-note{font-size:.82rem;background:var(--cream-2);border-radius:12px;padding:10px 12px;margin:12px 0;color:var(--navy);
+    border:1px dashed var(--sun)}
+  .checkout-btn{width:100%;justify-content:center;font-size:1.1rem;margin-top:4px}
+
+  /* ---------- modal ---------- */
+  .modal-wrap{position:fixed;inset:0;background:rgba(22,38,74,.55);display:none;place-items:center;z-index:100;padding:20px}
+  .modal-wrap.open{display:grid}
+  .modal{background:var(--cream);border-radius:26px;max-width:440px;width:100%;padding:38px 32px;text-align:center;
+    box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .modal .mascot{width:90px;margin:0 auto 10px;display:block}
+  .modal h3{font-size:1.7rem}
+  .modal p{margin:12px 0 8px}
+  .modal .order-sum{background:var(--paper);border:1px solid var(--cream-3);border-radius:14px;padding:14px;text-align:left;
+    font-size:.9rem;margin:16px 0;max-height:180px;overflow:auto}
+  .modal .order-sum .ln{display:flex;justify-content:space-between;padding:3px 0}
+  .demo-flag{font-family:"Baloo 2";font-weight:700;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+    color:#fff;background:var(--s-coral);display:inline-block;padding:.25em .8em;border-radius:999px;margin-bottom:14px}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120%);background:var(--navy);color:#fff;
+    font-family:"Baloo 2";font-weight:700;padding:.8em 1.4em;border-radius:999px;z-index:110;box-shadow:var(--shadow);
+    transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:900px){
+    .story-grid,.market-grid,.foot-grid{grid-template-columns:1fr}
+    .steps-grid{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .nav-links.mob{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--cream);
+      padding:18px 24px;gap:14px;border-bottom:1px solid var(--cream-3);box-shadow:var(--shadow-sm)}
+    .nav-toggle{display:grid;place-items:center}
+    .map-card{min-height:280px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== ANNOUNCEMENT ====== -->
+<div class="topbar">
+  🧁 Fresh every <b>Saturday</b> at the market &middot; Order online by <b>Thursday 6pm</b> for weekend pickup
+</div>
+
+<!-- ====== NAV ====== -->
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="brand" aria-label="France and Sprinkles home">
+      <span class="mark" id="navMark"></span>
+      <span class="name"><span class="capF"><span class="cap-ico" aria-hidden="true"></span>F</span>rance <span class="amp">&amp;</span>
+        <span class="sp"><span>S</span><span>p</span><span>r</span><span>i</span><span>n</span><span>k</span><span>l</span><span>es</span></span>
+      </span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#menu">Menu</a>
+      <a href="#story">Our Story</a>
+      <a href="#market">Saturday Market</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <button class="cart-btn" id="cartBtn" aria-label="Open cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="count" id="cartCount">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== HERO ====== -->
+<section class="hero" id="top">
+  <div class="confetti" id="confetti"></div>
+  <div class="hero-inner">
+    <span class="badge reveal" style="animation-delay:.05s">🥐 Artisanal &middot; Small-batch &middot; Baked with love in New Brunswick</span>
+    <span class="mascot" id="heroMascot"></span>
+    <h1 class="reveal" style="animation-delay:.15s">Baking with a<br>little extra
+      <span class="rainbow"><span>s</span><span>p</span><span>a</span><span>r</span><span>k</span><span>l</span><span>e</span></span>.</h1>
+    <p class="lede reveal" style="animation-delay:.28s">Buttery croissants, crusty sourdough, and the most colourful sprinkle treats around — pre-order online and pick them up fresh at our Saturday market stall.</p>
+    <div class="cta reveal" style="animation-delay:.4s">
+      <button class="btn btn-primary" onclick="document.getElementById('menu').scrollIntoView()">Start your order 🧁</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('market').scrollIntoView()">Find us Saturday</button>
+    </div>
+  </div>
+</section>
+
+<!-- ====== STEPS ====== -->
+<section class="steps">
+  <div class="wrap">
+    <div class="steps-grid">
+      <div class="step reveal"><span class="num">1</span><div class="ico">🛒</div><h3>Order online</h3><p>Browse the menu and place your order anytime before <b>Thursday 6pm</b>.</p></div>
+      <div class="step reveal" style="animation-delay:.12s"><span class="num">2</span><div class="ico">👩‍🍳</div><h3>We bake fresh</h3><p>Everything is made by hand Friday night & early Saturday — never the day before.</p></div>
+      <div class="step reveal" style="animation-delay:.24s"><span class="num">3</span><div class="ico">🧺</div><h3>Pick up Saturday</h3><p>Swing by our market stall, say bonjour, and grab your warm, ready-to-go bag.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MENU ====== -->
+<section class="menu" id="menu">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">The Menu</span>
+      <h2>This week's bake</h2>
+      <p>Tap to add to your bag. Quantities are limited each week — order early so you don't miss out!</p>
+    </div>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- ====== STORY ====== -->
+<section class="story" id="story">
+  <div class="wrap">
+    <div class="story-grid">
+      <div class="story-card">
+        <span class="big-sun" id="storySun"></span>
+        <h2>Where France meets a fistful of sprinkles</h2>
+        <p>We started with one wood oven, a treasured family recipe book, and a stubborn belief that bread should make you smile. Then we added the sprinkles.</p>
+        <p>Today every loaf, croissant, and cupcake is still made by hand in tiny batches — proper technique, playful soul.</p>
+      </div>
+      <div class="story-text">
+        <h2>Old-world craft <span class="amp">&amp;</span> a sunny disposition</h2>
+        <p>Our doughs are slow-fermented for real flavour, our butter is the good stuff, and our sprinkles are scattered with absolutely no restraint. We bake what we'd happily feed our own families.</p>
+        <p>Because we make everything fresh for the weekend market, nothing sits on a shelf. You taste it the day it's baked — the way it's meant to be.</p>
+        <div class="pill-list">
+          <span class="pill">🌾 Slow-fermented</span>
+          <span class="pill">🧈 Real butter</span>
+          <span class="pill">🤚 Hand-shaped</span>
+          <span class="pill">🌈 Sprinkles forever</span>
+        </div>
+        <div class="sig">— With love, the France &amp; Sprinkles team</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== MARKET ====== -->
+<section class="market" id="market">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="kicker">Find Us</span>
+      <h2>Every Saturday at the market</h2>
+      <p>Look for the sunny banner and the line of happy people. That's us.</p>
+    </div>
+    <div class="market-grid">
+      <div class="market-info">
+        <h2>The Saturday Market</h2>
+        <div class="info-row"><div class="ic">📍</div><div><b>Boyce Farmers Market</b>665 George St, Fredericton, NB<br><span style="font-size:.85rem;color:#6b7488">Stall #14 — by the side entrance</span></div></div>
+        <div class="info-row"><div class="ic">🕗</div><div><b>Saturdays, 8:00am – 1:00pm</b>Or until we sell out (it happens early!)</div></div>
+        <div class="info-row"><div class="ic">⏰</div><div><b>Order cut-off: Thursday 6:00pm</b>Pre-orders are bagged and labelled for fast pickup.</div></div>
+        <div class="info-row"><div class="ic">💳</div><div><b>Pay online or at the stall</b>Secure card payment online via Stripe, or cash & tap in person.</div></div>
+      </div>
+      <div class="map-card">
+        <div class="grid-lines"></div>
+        <div class="road"></div><div class="road2"></div>
+        <div class="map-pin">
+          <div class="dot">📍</div>
+          <b>France &amp; Sprinkles</b>
+          <span>Boyce Farmers Market · Stall #14</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== BAND ====== -->
+<section class="band">
+  <div class="wrap">
+    <div class="band-inner">
+      <div class="confetti" id="confetti2"></div>
+      <div style="position:relative;z-index:2">
+        <h2>Never miss a bake</h2>
+        <p>Join the list for the weekly menu drop, seasonal specials, and the occasional secret sprinkle batch.</p>
+        <div class="nl">
+          <input type="email" id="nlEmail" placeholder="you@email.com" aria-label="Email address">
+          <button class="btn btn-navy" onclick="subscribe()">Sign me up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== FOOTER ====== -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="name"><span class="capF"><span class="cap-ico" aria-hidden="true"></span>F</span>rance <span class="amp">&amp;</span> Sprinkles</div>
+        <p>Artisanal bakery + a whole lot of sprinkles. Made fresh for the Saturday market.</p>
+        <div class="foot-tri" style="margin-top:16px"></div>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <a href="#market">Saturday Market</a>
+        <a href="#menu">This Week's Menu</a>
+        <a href="#story">Our Story</a>
+      </div>
+      <div>
+        <h4>Say bonjour</h4>
+        <a href="mailto:france@francesprinkles.com">france@francesprinkles.com</a>
+        <a href="tel:+15065550123">(506) 555-0123</a>
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> France &amp; Sprinkles · Fredericton, NB</span>
+      <span>Made with butter, flour &amp; sprinkles 🌈</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ====== CART DRAWER ====== -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart">
+  <div class="drawer-head">
+    <h3>Your bag 🧺</h3>
+    <button class="x" id="closeCart" aria-label="Close cart">&times;</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot" style="display:none">
+    <div class="totals"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+    <div class="pickup-note">🧺 <b>Pickup only</b> — collect your order Saturday, 8am–1pm at Boyce Farmers Market, Stall #14. No delivery fee!</div>
+    <div class="totals grand"><span>Total</span><span id="grandtotal">$0.00</span></div>
+    <button class="btn btn-primary checkout-btn" id="checkoutBtn">Checkout securely 🔒</button>
+  </div>
+</aside>
+
+<!-- ====== MODAL ====== -->
+<div class="modal-wrap" id="modalWrap">
+  <div class="modal">
+    <span class="mascot" id="modalMascot"></span>
+    <span class="demo-flag" id="demoFlag">Demo mode — no real charge</span>
+    <h3 id="modalTitle">Merci for your order!</h3>
+    <p id="modalText">In live mode you'd now be sent to Stripe's secure checkout to pay. Here's what's in your bag:</p>
+    <div class="order-sum" id="orderSum"></div>
+    <button class="btn btn-navy" onclick="closeModal()" style="width:100%;justify-content:center">Got it</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   FRANCE & SPRINKLES — STORE CONFIG
+   ---------------------------------------------------------------------
+   Edit the values below to customise your shop. The two that matter
+   most when you go live with real payments are inside CONFIG.
+   ===================================================================== */
+const CONFIG = {
+  // ── DEMO MODE ──────────────────────────────────────────────────
+  // true  = click-through demo, NO real payment (good for previewing)
+  // false = real Stripe Checkout (requires the backend — see README)
+  DEMO_MODE: true,
+
+  // Your Stripe *publishable* key (starts with pk_...). Safe to expose.
+  // The SECRET key never goes here — it lives only on your backend.
+  STRIPE_PUBLISHABLE_KEY: "pk_test_REPLACE_ME",
+
+  // URL of your backend that creates a Stripe Checkout Session.
+  // e.g. "https://your-site.com/api/create-checkout-session"
+  CHECKOUT_ENDPOINT: "/api/create-checkout-session",
+
+  CURRENCY: "CAD",
+  CURRENCY_SYMBOL: "$"
+};
+
+/* ── PRODUCTS ──────────────────────────────────────────────────────
+   Add / edit items here. price is in dollars. Categories drive the
+   filter buttons automatically.                                       */
+const PRODUCTS = [
+  {id:"croissant",   cat:"Viennoiserie", name:"Butter Croissant",   price:4.50, emoji:"🥐", bg:"#FFEFD3", desc:"Laminated for two days, all real butter. Shatteringly flaky.", tag:"Bestseller"},
+  {id:"painchoc",    cat:"Viennoiserie", name:"Pain au Chocolat",   price:4.75, emoji:"🍫", bg:"#F1E0D0", desc:"Two batons of rich dark chocolate in flaky pastry."},
+  {id:"almond",      cat:"Viennoiserie", name:"Almond Croissant",   price:5.25, emoji:"🥐", bg:"#F6ECCF", desc:"Filled with frangipane, topped with toasted almonds & sugar."},
+  {id:"sourdough",   cat:"Breads",       name:"Sourdough Boule",    price:8.00, emoji:"🍞", bg:"#EBDCC2", desc:"48-hour fermented, blistered crust, open springy crumb.", tag:"Fresh"},
+  {id:"baguette",    cat:"Breads",       name:"Baguette Tradition", price:4.00, emoji:"🥖", bg:"#F0E2C7", desc:"Crackly crust, custardy inside. Best eaten within the hour."},
+  {id:"rye",         cat:"Breads",       name:"Country Rye",        price:7.50, emoji:"🍞", bg:"#E4D3BC", desc:"Hearty, nutty, lightly sour. Incredible with cheese."},
+  {id:"tartlet",     cat:"Pastries",     name:"Seasonal Fruit Tartlet", price:5.50, emoji:"🥧", bg:"#FBE2E8", desc:"Vanilla crème pâtissière + whatever's ripe this week."},
+  {id:"eclair",      cat:"Pastries",     name:"Chocolate Éclair",   price:5.00, emoji:"🍩", bg:"#EAD9CB", desc:"Choux pastry, vanilla cream, glossy chocolate glaze."},
+  {id:"canele",      cat:"Pastries",     name:"Canelés (4-pack)",   price:12.00, emoji:"🍮", bg:"#E8D2B0", desc:"Caramelised crust, custardy rum-vanilla centre. A timeless classic."},
+  {id:"cupcake",     cat:"Sweet & Sprinkly", name:"Funfetti Cupcake", price:4.00, emoji:"🧁", bg:"#FCE0EF", desc:"Vanilla bean cake, buttercream swirl, a blizzard of sprinkles.", tag:"Kid favourite"},
+  {id:"cookies",     cat:"Sweet & Sprinkly", name:"Sprinkle Sugar Cookies (6)", price:9.00, emoji:"🍪", bg:"#F4E6CF", desc:"Soft-baked, frosted, and absolutely covered in rainbow."},
+  {id:"macaron",     cat:"Sweet & Sprinkly", name:"Macaron Box (6)", price:15.00, emoji:"🌈", bg:"#EBE2F4", desc:"Six flavours, six colours. As pretty as they are delicious.", tag:"Gift-ready"}
+];
+
+/* =====================================================================
+   Below here is the engine — you usually don't need to edit it.
+   ===================================================================== */
+
+// ---- happy sun mascot (hat now lives on the "F") ----
+function mascotSVG(){
+  return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    <defs>
+      <radialGradient id="sung" cx="40%" cy="35%" r="70%">
+        <stop offset="0%" stop-color="#FFE08A"/><stop offset="60%" stop-color="#FBB94A"/><stop offset="100%" stop-color="#F49B22"/>
+      </radialGradient>
+    </defs>
+    <g fill="#F9A826">
+      ${Array.from({length:12}).map((_,i)=>{const a=i*30*Math.PI/180;const x1=60+Math.cos(a)*34,y1=60+Math.sin(a)*34,x2=60+Math.cos(a)*48,y2=60+Math.sin(a)*48;
+        return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#F9A826" stroke-width="5" stroke-linecap="round"/>`}).join("")}
+    </g>
+    <circle cx="60" cy="60" r="32" fill="url(#sung)" stroke="#E89020" stroke-width="2"/>
+    <circle cx="46" cy="66" r="6" fill="#F58FA0" opacity=".7"/>
+    <circle cx="74" cy="66" r="6" fill="#F58FA0" opacity=".7"/>
+    <path d="M44 56 q5 -7 10 0" fill="none" stroke="#3a2a12" stroke-width="3" stroke-linecap="round"/>
+    <path d="M66 56 q5 -7 10 0" fill="none" stroke="#3a2a12" stroke-width="3" stroke-linecap="round"/>
+    <path d="M50 68 q10 11 20 0" fill="none" stroke="#3a2a12" stroke-width="3" stroke-linecap="round"/>
+  </svg>`;
+}
+// ---- baker's toque, sits on the F of "France" ----
+function capSVG(){
+  return `<svg viewBox="0 0 64 56" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    <g fill="#fff" stroke="#E0D2B6" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M12 40 L12 24 Q12 12 25 12 Q32 6 39 12 Q52 12 52 24 L52 40 Z"/>
+      <rect x="17" y="37" width="30" height="13" rx="4"/>
+    </g>
+    <g stroke="#EADFC8" stroke-width="1.5" stroke-linecap="round" fill="none">
+      <path d="M26 19 L26 35"/>
+      <path d="M38 20 L38 35"/>
+    </g>
+  </svg>`;
+}
+document.getElementById('heroMascot').innerHTML = mascotSVG();
+document.getElementById('navMark').innerHTML = mascotSVG();
+document.getElementById('modalMascot').innerHTML = mascotSVG();
+document.getElementById('storySun').innerHTML = mascotSVG();
+document.querySelectorAll('.cap-ico').forEach(el=>el.innerHTML = capSVG());
+
+// ---- confetti / sprinkles ----
+const SPRINKLE_COLORS = ['#F2645A','#F58E33','#F4C53F','#7BB749','#3FB6C4','#4A8FD4','#EE7FB0','#9B7FC4'];
+function makeConfetti(el, n){
+  if(!el) return;
+  for(let i=0;i<n;i++){
+    const s=document.createElement('span');
+    s.className='sprinkle';
+    const round = Math.random()>.5;
+    const w = round? 8:14, h = round? 8:5;
+    s.style.width=w+'px'; s.style.height=h+'px';
+    s.style.left=Math.random()*100+'%';
+    s.style.top=Math.random()*100+'%';
+    s.style.background=SPRINKLE_COLORS[i%SPRINKLE_COLORS.length];
+    s.style.setProperty('--r',(Math.random()*360)+'deg');
+    s.style.animationDelay=(Math.random()*-9)+'s';
+    s.style.animationDuration=(7+Math.random()*5)+'s';
+    el.appendChild(s);
+  }
+}
+makeConfetti(document.getElementById('confetti'),34);
+makeConfetti(document.getElementById('confetti2'),18);
+
+// ---- render menu ----
+const money = n => CONFIG.CURRENCY_SYMBOL + n.toFixed(2);
+const grid = document.getElementById('productGrid');
+const filtersEl = document.getElementById('filters');
+const cats = ['All', ...[...new Set(PRODUCTS.map(p=>p.cat))]];
+let activeCat = 'All';
+
+cats.forEach(c=>{
+  const b=document.createElement('button');
+  b.className='filter'+(c==='All'?' active':'');
+  b.textContent=c; b.onclick=()=>{activeCat=c;[...filtersEl.children].forEach(x=>x.classList.remove('active'));b.classList.add('active');renderMenu();};
+  filtersEl.appendChild(b);
+});
+
+function renderMenu(){
+  grid.innerHTML='';
+  PRODUCTS.filter(p=>activeCat==='All'||p.cat===activeCat).forEach(p=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <div class="thumb" style="background:${p.bg}">
+        ${p.tag?`<span class="tag">${p.tag}</span>`:''}
+        ${p.emoji}
+      </div>
+      <div class="body">
+        <h3>${p.name}</h3>
+        <div class="desc">${p.desc}</div>
+        <div class="row">
+          <span class="price">${money(p.price)}</span>
+          <button class="add" data-id="${p.id}">Add +</button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+  grid.querySelectorAll('.add').forEach(btn=>{
+    btn.onclick=()=>{addToCart(btn.dataset.id);btn.textContent='Added ✓';btn.classList.add('added');
+      setTimeout(()=>{btn.textContent='Add +';btn.classList.remove('added');},900);};
+  });
+}
+renderMenu();
+
+// ---- cart state (in-memory) ----
+let cart = {}; // id -> qty
+function addToCart(id){cart[id]=(cart[id]||0)+1;updateCart();showToast('Added to your bag 🛍️');}
+function setQty(id,q){if(q<=0)delete cart[id];else cart[id]=q;updateCart();}
+
+function cartItems(){return Object.entries(cart).map(([id,q])=>({...PRODUCTS.find(p=>p.id===id),qty:q}));}
+function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
+function cartTotal(){return cartItems().reduce((a,i)=>a+i.price*i.qty,0);}
+
+function updateCart(){
+  const count=cartCount();
+  const cc=document.getElementById('cartCount');
+  cc.textContent=count; cc.classList.toggle('show',count>0);
+
+  const body=document.getElementById('drawerBody');
+  const foot=document.getElementById('drawerFoot');
+  const items=cartItems();
+  if(items.length===0){
+    body.innerHTML=`<div class="empty"><div class="e-ico">🧺</div><b>Your bag is empty</b><p style="margin-top:6px">Add some warm, sprinkly things from the menu!</p></div>`;
+    foot.style.display='none';
+    return;
+  }
+  body.innerHTML=items.map(i=>`
+    <div class="citem">
+      <div class="ci-thumb">${i.emoji}</div>
+      <div class="ci-info">
+        <b>${i.name}</b>
+        <span class="ci-price">${money(i.price)} each</span>
+        <div class="qty">
+          <button onclick="setQty('${i.id}',${i.qty-1})" aria-label="decrease">−</button>
+          <span>${i.qty}</span>
+          <button onclick="setQty('${i.id}',${i.qty+1})" aria-label="increase">+</button>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Baloo 2';font-weight:800;color:var(--navy)">${money(i.price*i.qty)}</div>
+        <button class="ci-rm" onclick="setQty('${i.id}',0)" aria-label="remove">🗑️</button>
+      </div>
+    </div>`).join('');
+  foot.style.display='block';
+  document.getElementById('subtotal').textContent=money(cartTotal());
+  document.getElementById('grandtotal').textContent=money(cartTotal());
+}
+updateCart();
+
+// ---- drawer open/close ----
+const overlay=document.getElementById('overlay'), drawer=document.getElementById('drawer');
+function openCart(){overlay.classList.add('open');drawer.classList.add('open');}
+function closeCart(){overlay.classList.remove('open');drawer.classList.remove('open');}
+document.getElementById('cartBtn').onclick=openCart;
+document.getElementById('closeCart').onclick=closeCart;
+overlay.onclick=closeCart;
+
+// ---- mobile nav ----
+document.getElementById('navToggle').onclick=()=>document.getElementById('navLinks').classList.toggle('mob');
+document.querySelectorAll('#navLinks a').forEach(a=>a.onclick=()=>document.getElementById('navLinks').classList.remove('mob'));
+
+// ---- toast ----
+let toastT;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),1800);}
+
+function subscribe(){const e=document.getElementById('nlEmail');if(e.value&&e.value.includes('@')){showToast('Merci! You\'re on the list 🌈');e.value='';}else{showToast('Pop in a valid email 🙂');}}
+
+// ---- checkout ----
+document.getElementById('checkoutBtn').onclick=checkout;
+async function checkout(){
+  const items=cartItems();
+  if(items.length===0) return;
+
+  if(CONFIG.DEMO_MODE){
+    // Demo: show a friendly summary, no real charge.
+    showOrderModal(items, true);
+    return;
+  }
+
+  // LIVE MODE — send the order to your backend, which creates a
+  // Stripe Checkout Session and returns its id. Then redirect to Stripe.
+  const btn=document.getElementById('checkoutBtn');
+  btn.textContent='Connecting to Stripe…'; btn.disabled=true;
+  try{
+    const res = await fetch(CONFIG.CHECKOUT_ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        items: items.map(i=>({id:i.id, qty:i.qty})),
+        fulfilment:'saturday-market-pickup'
+      })
+    });
+    if(!res.ok) throw new Error('Checkout failed ('+res.status+')');
+    const data = await res.json();
+    const stripe = Stripe(CONFIG.STRIPE_PUBLISHABLE_KEY);
+    // Backend should return { id: 'cs_...' }  (a Checkout Session id)
+    const result = await stripe.redirectToCheckout({sessionId:data.id});
+    if(result.error) throw result.error;
+  }catch(err){
+    showToast('Hmm, checkout hiccup. Try again?');
+    console.error(err);
+  }finally{
+    btn.textContent='Checkout securely 🔒'; btn.disabled=false;
+  }
+}
+
+function showOrderModal(items, demo){
+  document.getElementById('demoFlag').style.display = demo? 'inline-block':'none';
+  document.getElementById('orderSum').innerHTML =
+    items.map(i=>`<div class="ln"><span>${i.qty}× ${i.name}</span><span>${money(i.price*i.qty)}</span></div>`).join('')
+    + `<div class="ln" style="border-top:1px dashed #ddd;margin-top:6px;padding-top:6px;font-weight:800;color:var(--navy)"><span>Total</span><span>${money(cartTotal())}</span></div>`
+    + `<div style="margin-top:8px;font-size:.82rem;color:#6b7488">📍 Pickup: Saturday 8am–1pm, Boyce Farmers Market, Stall #14</div>`;
+  closeCart();
+  document.getElementById('modalWrap').classList.add('open');
+}
+function closeModal(){document.getElementById('modalWrap').classList.remove('open');}
+document.getElementById('modalWrap').onclick=e=>{if(e.target.id==='modalWrap')closeModal();};
+
+document.getElementById('yr').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>

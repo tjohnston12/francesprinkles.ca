@@ -1,0 +1,21 @@
+# ── Secrets / environment ──────────────────────────────
+# Ignore all env files EXCEPT the placeholder template.
+.env
+.env.*
+!.env.example
+
+# ── Dependencies ───────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+package-lock.json.bak
+
+# ── Vercel ─────────────────────────────────────────────
+.vercel
+
+# ── OS / editor cruft ──────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
